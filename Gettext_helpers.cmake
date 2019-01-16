@@ -4,11 +4,6 @@ find_program(GETTEXT_MSGFMT_COMMAND msgfmt)
 find_program(GETTEXT_MSGINIT_COMMAND msginit)
 find_program(GETTEXT_MSGMERGE_COMMAND msgmerge)
 
-if(NOT GETTEXT_XGETTEXT_COMMAND OR NOT GETTEXT_MSGFMT_COMMAND
-        OR NOT GETTEXT_MSGMERGE_COMMAND OR NOT GETTEXT_MSGINIT_COMMAND)
-    message(FATAL_ERROR "Could not find required programs!")
-endif()
-
 # configure_gettext(
 #     DOMAIN <domain-name>
 #     TARGET_NAME <target-name>
@@ -27,6 +22,11 @@ endif()
 #     )
 
 function(configure_gettext)
+    # Ensure the utility programs are available
+    if(NOT GETTEXT_XGETTEXT_COMMAND OR NOT GETTEXT_MSGFMT_COMMAND
+            OR NOT GETTEXT_MSGMERGE_COMMAND OR NOT GETTEXT_MSGINIT_COMMAND)
+        message(FATAL_ERROR "Could not find required programs!")
+    endif()
 
     set(options ALL)
     set(one_value_args 

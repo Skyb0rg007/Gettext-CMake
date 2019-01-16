@@ -85,3 +85,44 @@ Then simply call ```include(Gettext_helpers.cmake)``` and ```configure_gettext(.
 
 If errors occur while building, simply delete the generated files and re-run
 ```cmake```.
+
+A .po file is created using ```msginit```, so prepare for your terminal to be hijaked
+during a CMake run when a .po file is not found. The .po files should be committed
+into your project repo, so this will only affect users if they add an additional
+language
+
+# Workflow / Tutorial
+
+When starting a project, internationalization should not be the first priority,
+but should always be kept in mind. A reccomendation is to put the following in a
+private (local to the project) header:
+
+    #define _(STRING) STRING
+    #define N_(STRING) STRING
+    #define P_(SINGULAR, PLURAL, N) (N == 1u ? SINGULAR : PLURAL)
+
+Then, after support is desired, change this to
+
+    /* If making an executable */
+    #include <libintl.h>
+    #define _(STRING) gettext(STRING)
+    #define N_(STRING) STRING
+    #define P_(SINGULAR, PLURAL, N) ngettext(SINGULAR, PLURAL, N)
+
+    /* If making a library */
+    #include <libintl.h>
+    #define _(STRING) dgettext("domain-name", STRING)
+    #define N_(STRING) STRING
+    #define P_(SINGULAR, PLURAL, N) dngettext("domain-name", SINGULAR, PLURAL, N)
+
+And at the start of the program's execution
+
+    bindtextdomain("domain-name", "locale-dir");
+    /* Only write the following 2 lines if creating an executable */
+    setlocale(LC_ALL, ""); /* Set locale based on ENV */
+    textdomain("domain-name");
+
+Note that if "locale-dir" is relative, the program must not change directories,
+as gettext needs to be able to load .mo files on the fly with setlocale.
+
+Then finally to test the program, making sure the directories are correct
