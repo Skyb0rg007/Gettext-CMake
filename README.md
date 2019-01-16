@@ -76,7 +76,7 @@ Then simply call ```include(Gettext_helpers.cmake)``` and ```configure_gettext(.
     - This should be a relative path, ex. share/locale/
 * INSTALL_COMPONENT
     - Which component to install the .gmo files with
-* <PROG>_ARGS
+* \<PROG>_ARGS
     - A list of arguments to pass to the given program
     - XGETTEXT_ARGS are most likely to be used to specify additional keywords and
     package details, while the others are not as useful
