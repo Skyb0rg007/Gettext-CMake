@@ -115,6 +115,27 @@ Then, after support is desired, change this to
     #define N_(STRING) STRING
     #define P_(SINGULAR, PLURAL, N) dngettext("domain-name", SINGULAR, PLURAL, N)
 
+
+    # CMakeLists.txt
+    include(Gettext_helpers.cmake)
+    config_gettext(
+        DOMAIN "domain-name"
+        TARGET_NAME "my-app-gettext"
+        SOURCES "myapp.c" "util.c"
+        POTFILE_DESTINATION "share"
+        XGETTEXT_ARGS 
+            "--keyword=_" "--keyword=N_" "--keyword=P_:1,2"
+            "--package-name=${PROJECT_NAME}" "--package-version=${PROJECT_VERSION}"
+            "--copyright-holder=John Doe" "--msgid-bugs-address=example@website.com"
+        LANGUAGES "en_US.UTF-8" "fr_FR" "es")
+
+    find_package(Intl REQUIRED)
+
+    add_executable(my-app myapp.c util.c)
+    target_link_libraries(my-app ${Libintl_LIBRARY})
+    target_include_directories(my-app ${Libintl_INCLUDE_DIRS})
+    add_dependency(my-app my-app-gettext)
+
 And at the start of the program's execution
 
     bindtextdomain("domain-name", "locale-dir");
@@ -123,6 +144,4 @@ And at the start of the program's execution
     textdomain("domain-name");
 
 Note that if "locale-dir" is relative, the program must not change directories,
-as gettext needs to be able to load .mo files on the fly with setlocale.
-
-Then finally to test the program, making sure the directories are correct
+as gettext needs to be able to load .mo files on the fly after a setlocale call.
