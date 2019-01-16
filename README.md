@@ -51,7 +51,7 @@ Then simply call ```include(Gettext_helpers.cmake)``` and ```configure_gettext(.
     with XGETTEXT_ARGS
 * LANGUAGES
     - The languages to support. This will create directories
-    "<POFILE_LOCATION>/<LANG>/" to hold .po files, and the directory structure
+    "<POFILE_LOCATION>/\<LANG>/" to hold .po files, and the directory structure
     for installation. See the gettext documentation on how specific you need
     to be with your language, ("en" vs "en_US" vs "en_US.UTF-8")
 * ALL
