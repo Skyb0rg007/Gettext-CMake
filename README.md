@@ -83,7 +83,7 @@ Then simply call ```include(Gettext_helpers.cmake)``` and ```configure_gettext(.
 
 # Note
 
-If errors occur while building, simply delete the generated files and re-run
+If errors occur while building, simply delete the generated .pot file and re-run
 ```cmake```.
 
 A .po file is created using ```msginit```, so prepare for your terminal to be hijaked
@@ -145,3 +145,24 @@ And at the start of the program's execution
 
 Note that if "locale-dir" is relative, the program must not change directories,
 as gettext needs to be able to load .mo files on the fly after a setlocale call.
+
+If you have a GUI program, you may want to enable custom language settings. You
+can always call ```setlocale(LC_*, "locale-name")``` to manually set the locale
+after, for example, a different option is selected.
+
+On non-Linux platforms, choosing a non-relative "locale-dir" may be impossible,
+so try to initialize the program by determining where the locale directory is
+relative to the executable location and making it absolute. Ex.
+
+    const char *locale_relative = "../share/locale/";
+    char *current = get_exe_location();
+    char *locale_absolute;
+    asnprintf(&locale_absolute, "%s/%s", current, locale_relative);
+
+    bindtextdomain("domain-name", locale_absolute);
+    /* You can immediately destroy the locale argument, gettext makes a copy */
+    free(locale_absolute);
+
+    /* Now you can freely chdir(), as long as the user doesn't move the
+     * locale directory itself
+     */
