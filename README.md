@@ -37,8 +37,8 @@ Then simply call ```include(Gettext_helpers.cmake)``` and ```configure_gettext(.
 # Required arguments
 
 * DOMAIN
-    - The argument to ```bindtextdomain("@DOMAIN@", "@LOCALEDIR@")```
-    - The resulting files will be @DOMAIN@.pot, @DOMAIN@.po, etc.
+    - The argument to ```bindtextdomain("<DOMAIN>", "<LOCALEDIR>")```
+    - The resulting files will be ```DOMAIN.pot```, ```DOMAIN.po```, etc.
 * TARGET_NAME
     - The name of the target which maintains the gettext files
     - Note that the target is a ```UTILITY``` target, so you cannot use
@@ -51,7 +51,7 @@ Then simply call ```include(Gettext_helpers.cmake)``` and ```configure_gettext(.
     with XGETTEXT_ARGS
 * LANGUAGES
     - The languages to support. This will create directories
-    "@POFILE_LOCATION@/@LANG@/" to hold .po files, and the directory structure
+    "<POFILE_LOCATION>/<LANG>/" to hold .po files, and the directory structure
     for installation. See the gettext documentation on how specific you need
     to be with your language, ("en" vs "en_US" vs "en_US.UTF-8")
 * ALL
@@ -80,3 +80,8 @@ Then simply call ```include(Gettext_helpers.cmake)``` and ```configure_gettext(.
     - A list of arguments to pass to the given program
     - XGETTEXT_ARGS are most likely to be used to specify additional keywords and
     package details, while the others are not as useful
+
+# Note
+
+If errors occur while building, simply delete the generated files and re-run
+```cmake```.
