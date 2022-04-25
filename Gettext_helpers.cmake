@@ -100,8 +100,8 @@ function(configure_gettext)
                 "--output=${GETTEXT_POTFILE_DESTINATION}/${GETTEXT_DOMAIN}.pot"
             WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
     endif()
-    add_custom_command(
-        OUTPUT "${GETTEXT_POTFILE_DESTINATION}/${GETTEXT_DOMAIN}.pot"
+    # should use add_custom_target so .pot doesn't get cleaned
+    add_custom_target(${TARGET_NAME}_gen_pot
         COMMAND "${GETTEXT_XGETTEXT_COMMAND}" ${GETTEXT_XGETTEXT_ARGS}
             ${GETTEXT_SOURCES}
             "--output=${GETTEXT_POTFILE_DESTINATION}/${GETTEXT_DOMAIN}.pot"
@@ -128,13 +128,13 @@ function(configure_gettext)
                     "--locale=${lang}"
                 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
         endif()
-        add_custom_command(
-            OUTPUT "${GETTEXT_POFILE_DESTINATION}/${lang}/${GETTEXT_DOMAIN}.po"
+        # should use add_custom_target so .po doesn't get cleaned
+        add_custom_target(${TARGET_NAME}_gen_po_${lang}
             COMMAND "${GETTEXT_MSGMERGE_COMMAND}" ${GETTEXT_MSGMERGE_ARGS}
                 "${GETTEXT_POFILE_DESTINATION}/${lang}/${GETTEXT_DOMAIN}.po"
                 "${GETTEXT_POTFILE_DESTINATION}/${GETTEXT_DOMAIN}.pot"
                 "--output-file=${GETTEXT_POFILE_DESTINATION}/${lang}/${GETTEXT_DOMAIN}.po"
-            DEPENDS "${GETTEXT_POTFILE_DESTINATION}/${GETTEXT_DOMAIN}.pot"
+            DEPENDS ${TARGET_NAME}_gen_pot
             WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
             COMMENT "Updating the ${lang} .po file from the .pot file")
 
